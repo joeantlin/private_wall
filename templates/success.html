@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>User Page</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="warning">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <p>{{message}}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        </div>
+        
+        <div class="header">
+            <h1>Coding Dojo Wall</h1>
+            <h2>Welcome, {{ session['name'] }}</h2>
+            <a href="/logout"><button>Logout</button></a>
+        </div>
+
+        <div class="main-left">
+            <h3>{{ messages_num }} Messages for You</h3>
+                {% for message in my_messages %}
+                <div class="page-message">
+                    <p>{{ message['first_name'] }} {{ message['last_name'] }} said:</p>
+                    <p>"{{ message['message'] }}"</p>
+                </div>
+                <a href="/{{ message['to_id'] }}/{{ message['id'] }}/delete">Delete message</a>
+                {% endfor %}
+        </div>
+
+        <div class="main-right">
+            <h3>Send Messages</h3>
+                
+            <h4>You have sent {{ messages_sent }} messages</p>
+
+                {% for to in to_send %}
+                <div class="send-message">
+                    <form action="/send" method="post">
+                        <p>{{ to['first_name'] }} {{ to['last_name'] }}</p>
+                        <input type="hidden" name="reciever" value="{{ to['id'] }}">
+                        <textarea name="message" cols="30" rows="2"></textarea>
+                        <input type="submit" value="Send"> 
+                    </form>
+                </div>
+                {% endfor %}
+        </div>
+
+    </div>
+
+</body>
+</html>
